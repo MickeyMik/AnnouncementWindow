@@ -23,6 +23,7 @@ import util
 import os
 import TagConfig
 from collections import OrderedDict
+from PIL import Image, ImageTk
 
 # import psutil,time
 
@@ -36,6 +37,7 @@ class announcement_window(Tkinter.Frame):
         self.id = id_
         self.show_tags = False
         self.index_dict = {}
+        self.icon_dict = {}
         Filters.expressions.add_window(self.id)
         self.customFont = dict_to_font(self.parent.gui_data['font_w%s' % self.id])
         self.config_gui = None
@@ -107,6 +109,22 @@ class announcement_window(Tkinter.Frame):
         self.gen_tags(clear_index_dict=True)
         self.config(state="disabled")
 
+    def gen_icons(self,size=20):
+        """Generate a list of PIL Image object
+        from the icons inside the Icons directory"""
+        iconpath="Icons" # TODO in config maybe?
+        for icon_file in os.listdir(iconpath):
+            icon_path=os.path.join(iconpath,icon_file)
+            try:
+                _icon=Image.open(icon_path)
+                _icon=_icon.resize((size,size),Image.ANTIALIAS)
+                icon=ImageTk.PhotoImage(_icon)
+                self.icon_dict[os.path.splitext(icon_file)[0]]=icon
+            except IOError as err:
+                print("Cannot convert '%s' into PIL Image object" % icon_path)
+        for obj in self.icon_dict:
+            print(obj,self.icon_dict[obj])
+
     def gen_tags(self, clear_index_dict=False):
         """Generate the tkinter tags for coloring
         """        
@@ -141,6 +159,8 @@ class announcement_window(Tkinter.Frame):
             tokenized = re.split(regex, ann.get_text())
             for token in tokenized:
                 hlwordcolor=WordColor.wd.get_colorname(token,anngroup)
+                if token in Config.settings.icons_word_dict:
+                    self.text.image_create("end",image=self.icon_dict[Config.settings.icons_word_dict[token]]) # Need to put icon_dict somewhere reachable here.
                 self.insert("end", "%s" % token, tag_name)
                 if hlwordcolor:
                     start="end-"+str(1+len(token))+"c"
@@ -181,6 +201,7 @@ class main_gui(Tkinter.Tk):
         self.init_menu()
         self.init_windows()
         self.gen_tags()
+        self.gen_icons()
         # self.parallel()
         self.get_announcements(old=Config.settings.load_previous_announcements)
         self.pack_announcements()
@@ -226,6 +247,10 @@ class main_gui(Tkinter.Tk):
         self.panel.add(self.announcement_windows[1])
         self.panel.update_idletasks()
         self.panel.sash_place(0, 0, self.gui_data["sash_place"])  # TODO: update to support multiple sashes
+
+    def gen_icons(self):
+        for announcement_win in self.announcement_windows.items():
+            announcement_win[1].gen_icons()
 
     def gen_tags(self):
         Filters.expressions.reload()

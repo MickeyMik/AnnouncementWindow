@@ -96,7 +96,7 @@ class config(object):
                     self.word_color_dict[color_name]=fg_bg
             self.icons_word_dict={}
             for (icon_name,icon_words) in self.parser.items("Icons"):
-                words_list=icon_words.split()
+                words_list=icon_words.split(",")
                 for word in words_list:
                     self.icons_word_dict[word]=icon_name
 

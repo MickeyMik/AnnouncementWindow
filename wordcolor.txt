@@ -70,7 +70,7 @@
 [General][purple] "Messenger"
 
 #Noble
-[General][yellow] "queen,king,mayor,baronness,baron,chief medical dwarf,outpost liaison,manager,captain of the guard,militia captain"
+[General][yellow] "queen,king,mayor,baroness,baron,chief medical dwarf,outpost liaison,manager,captain of the guard,militia captain"
 
 ###########
 # Emotion #
