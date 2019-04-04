@@ -43,7 +43,7 @@
 [General][yellow] "Spearmaster"
 [General][green] "Crossbowman"
 [General][lime] "Elite Crossbowman"
-[General][silver] "Wrestler,Miner"
+[General][silver] "Wrestler"
 [General][white] "Elite Wrestler"
 [General][navy] "Axeman"
 [General][blue] "Axe Lord"
