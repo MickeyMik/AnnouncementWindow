@@ -168,7 +168,6 @@ class announcement_window(Tkinter.Frame):
             for word in Config.settings.icons_word_dict:
                 icon_index = self.search("\m%s\M" % word,'end',stopindex='end-%dc linestart' % len(anntext),backwards=True,regexp=True)
                 while icon_index :
-                    print(word, icon_index)
                     self.text.image_create(icon_index,image=self.icon_dict[Config.settings.icons_word_dict[word]])
                     icon_index = self.search("\m%s\M" % word,icon_index,stopindex='end-%dc linestart' % len(anntext),backwards=True,regexp=True)
             self.trim_announcements(tag_name)
