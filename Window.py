@@ -153,19 +153,24 @@ class announcement_window(Tkinter.Frame):
         def insert():
             anngroup=ann.get_group()
             anncat=ann.get_category()
+            anntext = ann.get_text()
             tag_name = "%s.%s" % (anngroup, anncat)
             self.insert("end", "[%s][%s] " % (anngroup, anncat), '%s.elide' % tag_name)
             regex=r"(\b"+'\\b|\\b'.join(WordColor.wd.get_all_group_words(anngroup))+"\\b)"
-            tokenized = re.split(regex, ann.get_text())
+            tokenized = re.split(regex, anntext)
             for token in tokenized:
                 hlwordcolor=WordColor.wd.get_colorname(token,anngroup)
-                if token in Config.settings.icons_word_dict:
-                    self.text.image_create("end",image=self.icon_dict[Config.settings.icons_word_dict[token]]) # Need to put icon_dict somewhere reachable here.
                 self.insert("end", "%s" % token, tag_name)
                 if hlwordcolor:
                     start="end-"+str(1+len(token))+"c"
                     end="end-1c"
                     self.tag_add(hlwordcolor,start,end)
+            for word in Config.settings.icons_word_dict:
+                icon_index = self.search("\m%s\M" % word,'end',stopindex='end-%dc linestart' % len(anntext),backwards=True,regexp=True)
+                while icon_index :
+                    print(word, icon_index)
+                    self.text.image_create(icon_index,image=self.icon_dict[Config.settings.icons_word_dict[word]])
+                    icon_index = self.search("\m%s\M" % word,icon_index,stopindex='end-%dc linestart' % len(anntext),backwards=True,regexp=True)
             self.trim_announcements(tag_name)
 
         if ann.get_show(self.id):
