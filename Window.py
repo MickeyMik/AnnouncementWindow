@@ -37,7 +37,7 @@ class announcement_window(Tkinter.Frame):
         self.id = id_
         self.show_tags = False
         self.index_dict = {}
-        self.icon_dict = {}
+        self.icons_dict = {}
         Filters.expressions.add_window(self.id)
         self.customFont = dict_to_font(self.parent.gui_data['font_w%s' % self.id])
         self.config_gui = None
@@ -113,17 +113,21 @@ class announcement_window(Tkinter.Frame):
         """Generate a list of PIL Image object
         from the icons inside the Icons directory"""
         iconpath="Icons" # TODO in config maybe?
+        icon_word_dict=Config.settings.get_icons_words()
         for icon_file in os.listdir(iconpath):
             icon_path=os.path.join(iconpath,icon_file)
+            icon_name=os.path.splitext(icon_file)[0]
             try:
                 _icon=Image.open(icon_path)
                 _icon=_icon.resize((size,size),Image.ANTIALIAS)
                 icon=ImageTk.PhotoImage(_icon)
-                self.icon_dict[os.path.splitext(icon_file)[0]]=icon
+                words = icon_word_dict[icon_name].split(',')
+                for word in words:
+                    self.icons_dict[word]=icon
             except IOError as err:
-                print("Cannot convert '%s' into PIL Image object" % icon_path)
-        for obj in self.icon_dict:
-            print(obj,self.icon_dict[obj])
+                print("Cannot convert '%s' into PIL Image object or can't find %s in Settings.cfg" % (icon_path,icon_name))
+        # for obj in self.icons_dict:
+        #     print(obj,self.icons_dict[obj])
 
     def gen_tags(self, clear_index_dict=False):
         """Generate the tkinter tags for coloring
@@ -165,10 +169,10 @@ class announcement_window(Tkinter.Frame):
                     start="end-"+str(1+len(token))+"c"
                     end="end-1c"
                     self.tag_add(hlwordcolor,start,end)
-            for word in Config.settings.icons_word_dict:
+            for word in self.icons_dict:
                 icon_index = self.search("\m%s\M" % word,'end',stopindex='end-%dc linestart' % len(anntext),backwards=True,regexp=True)
                 while icon_index :
-                    self.text.image_create(icon_index,image=self.icon_dict[Config.settings.icons_word_dict[word]])
+                    self.text.image_create(icon_index,image=self.icons_dict[word])
                     icon_index = self.search("\m%s\M" % word,icon_index,stopindex='end-%dc linestart' % len(anntext),backwards=True,regexp=True)
             self.trim_announcements(tag_name)
 

@@ -94,11 +94,15 @@ class config(object):
                     if len(fg_bg)==1:
                         fg_bg.append(self.default_bg)
                     self.word_color_dict[color_name]=fg_bg
-            self.icons_word_dict={}
+
+    def get_icons_words(self):
+        icons_word_dict={}
+        if self.parser.items("Icons"):
             for (icon_name,icon_words) in self.parser.items("Icons"):
-                words_list=icon_words.split(",")
-                for word in words_list:
-                    self.icons_word_dict[word]=icon_name
+                icons_word_dict[icon_name]=icon_words
+            return icons_word_dict
+        else :
+            return "No Icons sections"
 
     def save(self):
         with open(self.filepath, 'w') as fi:
