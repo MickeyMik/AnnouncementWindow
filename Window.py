@@ -121,11 +121,14 @@ class announcement_window(Tkinter.Frame):
                 _icon=Image.open(icon_path)
                 _icon=_icon.resize((size,size),Image.ANTIALIAS)
                 icon=ImageTk.PhotoImage(_icon)
-                words = icon_word_dict[icon_name].split(',')
-                for word in words:
-                    self.icons_dict[word]=icon
+                if icon_name in icon_word_dict :
+                    words = icon_word_dict[icon_name].split(',') # TODO better error handling for dictionnaty
+                    for word in words:
+                        self.icons_dict[word]=icon
+                else :
+                    print("Can't find %s in Settings.cfg" % icon_name)
             except IOError as err:
-                print("Cannot convert '%s' into PIL Image object or can't find %s in Settings.cfg" % (icon_path,icon_name))
+                print("Cannot convert '%s' into PIL Image object." % icon_path)
         # for obj in self.icons_dict:
         #     print(obj,self.icons_dict[obj])
 
