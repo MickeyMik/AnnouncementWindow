@@ -242,6 +242,7 @@ class main_gui(Tkinter.Tk):
         from the icons inside the Icons directory"""
         iconpath="Icons" # TODO in config maybe?
         Config.settings.reload_icons_words()
+        Config.settings.icons_dict={}
         for icon_file in os.listdir(iconpath):
             icon_path=os.path.join(iconpath,icon_file)
             icon_name=os.path.splitext(icon_file)[0]
