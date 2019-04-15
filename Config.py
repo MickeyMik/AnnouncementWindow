@@ -39,6 +39,8 @@ class config(object):
         self.filters_path = "filters.txt"
         self.wordcolor_path = "wordcolor.txt"
         self.gui_data = "Data/gui.dat"
+        self.icons_dict={}
+        self.icons_word_dict={}
         self.filters_pickle_path = "Data/filters.dat"
         self.icon_path = "@Data/favicon.XBM" if util.platform.linux else "Data/favicon.ico"
         self.init_var()
@@ -95,14 +97,14 @@ class config(object):
                         fg_bg.append(self.default_bg)
                     self.word_color_dict[color_name]=fg_bg
 
-    def get_icons_words(self):
-        icons_word_dict={}
+    def reload_icons_words(self):
+        self.load()
+        self.icons_word_dict={}
         if self.parser.items("Icons"):
             for (icon_name,icon_words) in self.parser.items("Icons"):
-                icons_word_dict[icon_name]=icon_words
-            return icons_word_dict
+                self.icons_word_dict[icon_name]=icon_words
         else :
-            return "No Icons sections"
+            print("No Icons sections")
 
     def save(self):
         with open(self.filepath, 'w') as fi:
