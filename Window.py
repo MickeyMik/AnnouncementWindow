@@ -201,6 +201,7 @@ class main_gui(Tkinter.Tk):
         options_menu.add_command(label="Edit filters.txt", command=self.open_filters)
         options_menu.add_command(label="Reload wordcolor.txt", command=WordColor.wd.reload)
         options_menu.add_command(label="Reload filters.txt", command=Filters.expressions.reload)
+        options_menu.add_command(label="Reload Settings", command=self.reload_settings)
 
         options_menu.add_command(label="Reload Icons", command=self.reload_icons)
 
@@ -271,6 +272,10 @@ class main_gui(Tkinter.Tk):
         self.gui_data["sash_place"] = self.panel.sash_coord(0)[1]
         Config.settings.save_gui_data(self.gui_data)
         self.destroy()
+
+    def reload_settings(self):
+        Config.settings.load()
+        self.gen_tags()
 
     def edit_filters(self):
         Editor.TextEditor(Config.settings.filters_path)
