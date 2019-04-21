@@ -86,6 +86,8 @@ class config(object):
             self.parser.set("Colors", 'default_background', str(self.default_bg))
             for color in self.word_color_dict:
                 self.parser.set("Colors",color,self.word_color_dict[color][0])
+            self.parser.add_section("Icons")
+            self.parser.set("Icons", 'dwarf','dwarf,dwarves')
             self.save()
         else:
             self.parser.read(self.filepath)
