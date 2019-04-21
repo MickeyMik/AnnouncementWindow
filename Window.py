@@ -202,7 +202,6 @@ class main_gui(Tkinter.Tk):
         options_menu.add_command(label="Reload wordcolor.txt", command=WordColor.wd.reload)
         options_menu.add_command(label="Reload filters.txt", command=Filters.expressions.reload)
         options_menu.add_command(label="Reload Settings", command=self.reload_settings)
-
         options_menu.add_command(label="Reload Icons", command=self.reload_icons)
 
         self.settings_menu = Tkinter.Menu(self.menu, tearoff=0)
