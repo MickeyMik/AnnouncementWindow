@@ -282,6 +282,7 @@ class main_gui(Tkinter.Tk):
     def reload_icons(self):
         for announcement_win in self.announcement_windows.items():
             announcement_win[1].clear_window()
+        self.reload_settings()
         self.load_icons()
 
     def open_filters(self):
