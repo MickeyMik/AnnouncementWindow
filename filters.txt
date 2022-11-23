@@ -73,7 +73,6 @@
 [battle][hitevents] "The (.+) and the severed part sails off in an arc!"
 [battle][hitevents] "The (.+) takes the full force of the impact(.+)"
 [battle][hitevents] "The flying (.+) strikes (.+)"
-[battle][hitevents] "The (.+) strikes The (.+)"
 
 [battle][status] "The (.+) (vomits|retches|looks sick|looks even more sick|trouble breathing).+"
 [battle][status] "(.+) skids along the ground!"
@@ -178,11 +177,12 @@
 [battle][gore] "A tendon has been strained!"
 [battle][gore] "A tendon in the (.+) has been bruised!"
 [battle][gore] "A ligament in (.+) has been (.+)!"
+[battle][gore] "A ligament has been (.+)!"
 [battle][gore] "The (.+) is smashed into the (.+), an unrecognizable mass!"
 [battle][gore] "(.+) in the (.+) with (.+) and the injured part is cloven asunder!"
 [battle][gore] "(.+) blood is sucked out of the wound!"
 
-[battle][strikes] "The (.+) (leaps at|punches|catches|snatches at|stabs|grabs|hacks|pushes|misses|slashes|shakes|blocks|gores|strangles|strikes|scratches|kicks|attacks|lashes|slaps|bashes|bites|strikes at|punches|releases|throws|takes|locks|bends|places a chokehold on|gouges) The (.+)"
+[battle][strikes] "The (.+) (leaps at|punches|catches|snatches at|stabs|grabs|hacks|pushes|misses|slashes|shakes|blocks|gores|strangles|strikes|scratches|kicks|attacks|lashes|slaps|bashes|bites|strikes at|punches|releases|throws|takes|locks|bends|places a chokehold on|gouges|twists|pulls|bends) the (.+)"
 
 [battle_trance][trance] "(.+) has entered a martial trance!"
 [battle_trance][trance] "(.+) has left the martial trance\."
