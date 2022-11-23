@@ -1,8 +1,10 @@
 import sys
 if sys.version_info.major == 2:
     import ConfigParser
+    import tkMessageBox
 elif sys.version_info.major == 3:
     import configparser as ConfigParser
+    import tkinter.messagebox as tkMessageBox
 
 import pickle
 import os
@@ -39,6 +41,9 @@ class config(object):
         self.filters_path = "filters.txt"
         self.wordcolor_path = "wordcolor.txt"
         self.gui_data = "Data/gui.dat"
+        self.icons_toggle=True
+        self.icons_dict={}
+        self.icons_word_dict={}
         self.filters_pickle_path = "Data/filters.dat"
         self.icon_path = "@Data/favicon.XBM" if util.platform.linux else "Data/favicon.ico"
         self.init_var()
@@ -53,6 +58,9 @@ class config(object):
     def save_gui_data(self, data):
         with open(self.gui_data, 'wb') as fi:
             pickle.dump(data, fi, protocol=0)
+
+    def toggle_icons(self):
+        self.icons_toggle = not self.icons_toggle
 
     def init_var(self):
         self.gamelogpath = locate_gamelog()
@@ -75,6 +83,8 @@ class config(object):
             self.parser.set("Colors", 'default_background', str(self.default_bg))
             for color in self.word_color_dict:
                 self.parser.set("Colors",color,self.word_color_dict[color][0])
+            self.parser.add_section("Icons")
+            self.parser.set("Icons", 'dwarf','dwarf,dwarves')
             self.save()
         else:
             self.parser.read(self.filepath)
@@ -84,13 +94,25 @@ class config(object):
             self.trim_announcements[0] = self.parser.getint("Settings", 'trim_announcements_0')
             self.trim_announcements[1] = self.parser.getint("Settings", 'trim_announcements_1')
             self.word_color_dict={}
-            self.default_bg = self.parser.get("Colors", 'default_background')
+            self.default_bg = self.parser.get("Colors", 'default_background').split()[0]
             for (color_name,color_value) in self.parser.items("Colors"):
                 fg_bg=color_value.split()
                 if color_name != "default_background":
                     if len(fg_bg)==1:
                         fg_bg.append(self.default_bg)
                     self.word_color_dict[color_name]=fg_bg
+
+    def reload_icons_words(self):
+        self.load()
+        self.icons_word_dict={}
+        try :
+            for (icon_name,icon_words) in self.parser.items("Icons"):
+                self.icons_word_dict[icon_name]=icon_words
+        except ConfigParser.NoSectionError as err:
+            tkMessageBox.showerror(
+                "Error",
+                "Settings.cfg Error:\n%s" % err
+            )
 
     def save(self):
         with open(self.filepath, 'w') as fi:

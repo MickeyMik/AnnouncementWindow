@@ -43,7 +43,7 @@
 [General][yellow] "Spearmaster"
 [General][green] "Crossbowman"
 [General][lime] "Elite Crossbowman"
-[General][silver] "Wrestler,Miner"
+[General][silver] "Wrestler"
 [General][white] "Elite Wrestler"
 [General][navy] "Axeman"
 [General][blue] "Axe Lord"
@@ -70,7 +70,7 @@
 [General][purple] "Messenger"
 
 #Noble
-[General][yellow] "queen,king,mayor,baronness,baron,chief medical dwarf,outpost liaison,manager,captain of the guard,militia captain"
+[General][yellow] "queen,king,mayor,baroness,baron,chief medical dwarf,outpost liaison,manager,captain of the guard,militia captain"
 
 ###########
 # Emotion #

@@ -23,6 +23,7 @@ import util
 import os
 import TagConfig
 from collections import OrderedDict
+from PIL import Image, ImageTk
 
 # import psutil,time
 
@@ -135,10 +136,11 @@ class announcement_window(Tkinter.Frame):
         def insert():
             anngroup=ann.get_group()
             anncat=ann.get_category()
+            anntext = ann.get_text()
             tag_name = "%s.%s" % (anngroup, anncat)
             self.insert("end", "[%s][%s] " % (anngroup, anncat), '%s.elide' % tag_name)
             regex=r"(\b"+'\\b|\\b'.join(WordColor.wd.get_all_group_words(anngroup))+"\\b)"
-            tokenized = re.split(regex, ann.get_text())
+            tokenized = re.split(regex, anntext)
             for token in tokenized:
                 hlwordcolor=WordColor.wd.get_colorname(token,anngroup)
                 self.insert("end", "%s" % token, tag_name)
@@ -146,6 +148,11 @@ class announcement_window(Tkinter.Frame):
                     start="end-"+str(1+len(token))+"c"
                     end="end-1c"
                     self.tag_add(hlwordcolor,start,end)
+            for word in Config.settings.icons_dict:
+                icon_index = self.search("\m%s\M" % word,'end',stopindex='end-%dc linestart' % len(anntext),backwards=True,regexp=True)
+                while icon_index :
+                    self.text.image_create(icon_index,image=Config.settings.icons_dict[word])
+                    icon_index = self.search("\m%s\M" % word,icon_index,stopindex='end-%dc linestart' % len(anntext),backwards=True,regexp=True)
             self.trim_announcements(tag_name)
 
         if ann.get_show(self.id):
@@ -181,6 +188,7 @@ class main_gui(Tkinter.Tk):
         self.init_menu()
         self.init_windows()
         self.gen_tags()
+        self.load_icons()
         # self.parallel()
         self.get_announcements(old=Config.settings.load_previous_announcements)
         self.pack_announcements()
@@ -194,6 +202,7 @@ class main_gui(Tkinter.Tk):
         options_menu.add_command(label="Reload wordcolor.txt", command=WordColor.wd.reload)
         options_menu.add_command(label="Reload filters.txt", command=Filters.expressions.reload)
         options_menu.add_command(label="Reload Settings", command=self.reload_settings)
+        options_menu.add_command(label="Reload Icons", command=self.reload_icons)
 
         self.settings_menu = Tkinter.Menu(self.menu, tearoff=0)
         self.settings_menu.add_command(label="Set Directory", command=self.askpath)
@@ -229,6 +238,28 @@ class main_gui(Tkinter.Tk):
         self.panel.update_idletasks()
         self.panel.sash_place(0, 0, self.gui_data["sash_place"])  # TODO: update to support multiple sashes
 
+    def load_icons(self,size=20):
+        """Generate a list of PIL Image object
+        from the icons inside the Icons directory"""
+        iconpath="Icons" # TODO in config maybe?
+        Config.settings.reload_icons_words()
+        Config.settings.icons_dict={}
+        for icon_file in os.listdir(iconpath):
+            icon_path=os.path.join(iconpath,icon_file)
+            icon_name=os.path.splitext(icon_file)[0]
+            try:
+                _icon=Image.open(icon_path)
+                _icon=_icon.resize((size,size),Image.ANTIALIAS)
+                icon=ImageTk.PhotoImage(_icon)
+                if icon_name in Config.settings.icons_word_dict :
+                    words = Config.settings.icons_word_dict[icon_name].split(',') # TODO better error handling for dictionnaty
+                    for word in words:
+                        Config.settings.icons_dict[word]=icon
+                else :
+                    print("Can't find %s in Settings.cfg" % icon_name)
+            except IOError as err:
+                print("Cannot convert '%s' into PIL Image object." % icon_path)
+
     def gen_tags(self):
         Filters.expressions.reload()
         for announcement_win in self.announcement_windows.items():
@@ -247,6 +278,12 @@ class main_gui(Tkinter.Tk):
 
     def edit_filters(self):
         Editor.TextEditor(Config.settings.filters_path)
+
+    def reload_icons(self):
+        for announcement_win in self.announcement_windows.items():
+            announcement_win[1].clear_window()
+        self.reload_settings()
+        self.load_icons()
 
     def open_filters(self):
         Editor.native_open(Config.settings.filters_path)
