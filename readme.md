@@ -10,7 +10,9 @@ This program was written for python 2.7.10, but now has python 3 support! It sho
 
 #### **Changes in this Fork**
 
-I made this fork to share my work on updating the filter to include new announcements that I've stumbled upon, but also to incorporate bug fixes from other forks! Thanks to BrachystochroneSD for adding multiple colors and updating the filter to DF v0.44.12, ZechyW for the case-insensitive fix for filter, kapsi1 for the checkbox fix, and of course NuAoA for the original project!
+I made this fork to share my work on updating the filter to include new announcements that I've stumbled upon, but also to incorporate bug fixes from other forks! Thanks to BrachystochroneSD for adding multiple colors, adding icons to words, and updating the filter to DF v0.44.12, ZechyW for the case-insensitive fix for filter, kapsi1 for the checkbox fix, and of course NuAoA for the original project!
+
+Icons free from https://game-icons.net/.
 
 ## Configuration
 
